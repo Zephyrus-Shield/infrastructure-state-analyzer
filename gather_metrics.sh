@@ -3,14 +3,14 @@
 #error handling enforcement
 set -euo pipefail
 
-#Defining the path to the log file
-LOG_FILE="/var/log/infra_analyzer.log"
+#Dynamically fetching the file paths
+SCRIPT_DIR=$(dirname "$(realpath "$0")")
 
 #Defining the path to the config file 
-CONFIG_FILE="/home/eudofia/projects/infra-analyzer/services.conf"
+CONFIG_FILE="$SCRIPT_DIR/services.conf"
 
 #Defining the path to the endpoints file
-ENDPOINTS_FILE="/home/eudofia/projects/infra-analyzer/endpoints.conf"
+ENDPOINTS_FILE="$SCRIPT_DIR/endpoints.conf"
 
 #function to gather memory usage
 get_memory_usage(){
@@ -56,15 +56,9 @@ get_service_status(){
 #function to check endpoints connectivity
 get_endpoints_status(){
     local endpoint="$1"
-    local status
-    status=$(code=$(curl -s -L -o /dev/null --connect-timeout 2 -w "%{http_code}" "$endpoint") && { [ "$code" -eq 200 ] && echo "reachable, code: 200" || { [ "$code" -eq 000 ] && echo "Unreachable, timed out" || echo "unreachable, error: $code"; }; })
-    echo "$status"
+    #just output the 3-digit HTTP code. No text
+    curl -s -L -o /dev/null --connect-timeout 2 -w "%{http_code}" "$endpoint"
 }
-
-#function to gather network and connectivity metrics
-#get_network_status(){
-    
-#}
 
 #calling the hardware metrics functions and saving their outputs to variables
 mem=$(get_memory_usage)

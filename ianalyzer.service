@@ -1,0 +1,10 @@
+[Unit]
+Description=Infrastructure State AnalyzerEngine
+After=network-online.target
+
+[Service]
+Type=oneshot
+User={{USER}}
+Group=infra_monitoring
+WorkingDirectory={{INSTALL_DIR}}
+ExecStart=/usr/bin/python3 {{INSTALL_DIR}}/analyzer.py
