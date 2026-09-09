@@ -57,7 +57,7 @@ get_service_status(){
 get_endpoints_status(){
     local endpoint="$1"
     #just output the 3-digit HTTP code. No text
-    curl -s -L -o /dev/null --connect-timeout 2 -w "%{http_code}" "$endpoint"
+    curl -s -L -o /dev/null --connect-timeout 2 -w "%{http_code}" "$endpoint" || true
 }
 
 #calling the hardware metrics functions and saving their outputs to variables
