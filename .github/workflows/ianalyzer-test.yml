@@ -1,0 +1,28 @@
+name: ianalyzer-deployment-test
+
+# 1. THE TRIGGER: Wake up when code is pushed to main
+on:
+  push:
+    branches:
+      - main
+
+# 2. THE RUNNER: Order a fresh Ubuntu VM from the cloud
+jobs:
+  test-installation:
+    runs-on: ubuntu-latest 
+
+    # 3. THE STEPS: Execute the test protocol
+    steps:
+      # Step 3a: The 'git clone' command. 
+      # We use GitHub's official pre-built shortcut for this because it 
+      # automatically handles authentication and puts us in the right folder.
+      - name: Download Code
+        uses: actions/checkout@v4 
+
+      # Step 3b: Execute the deployment script
+      - name: Run the Installer
+        run: sudo bash install-ianalyzer.sh
+
+      # Step 3c: Ask systemd if the timer is alive
+      - name: Verify Systemd Timer
+        run: systemctl status ianalyzer.timer
